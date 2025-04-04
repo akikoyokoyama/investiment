@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>耐えられる上昇ポイント計算機</title>
+  <style>
+    .section { display: none; }
+    .active { display: block; }
+  </style>
+</head>
+<body>
+  <h2>耐えられる上昇ポイント計算機</h2>
+
+  <button onclick="showSection('eu')">EUボラティリティ</button>
+  <button onclick="showSection('us')">USボラティリティ</button>
+
+  <!-- EU計算機 -->
+  <div id="eu" class="section active">
+    <h3>EUボラティリティ</h3>
+    <label>取引可能残高（円）:
+      <input type="number" id="euBalance" placeholder="例: 50000">
+    </label><br><br>
+    <label>ポジション数:
+      <input type="number" id="euPositions" placeholder="例: 2">
+    </label><br><br>
+    <label>1ポジションあたりのユーロ量:
+      <input type="number" id="euUnit" value="100">
+    </label><br><br>
+    <label>為替レート（円/ユーロ）:
+      <input type="number" id="euRate" value="160">
+    </label><br><br>
+    <button onclick="calculate('eu')">計算する</button>
+    <h4>耐えられる上昇ポイント: <span id="euResult"></span></h4>
+  </div>
+
+  <!-- US計算機 -->
+  <div id="us" class="section">
+    <h3>USボラティリティ</h3>
+    <label>取引可能残高（円）:
+      <input type="number" id="usBalance" placeholder="例: 50000">
+    </label><br><br>
+    <label>ポジション数:
+      <input type="number" id="usPositions" placeholder="例: 2">
+    </label><br><br>
+    <label>1ポジションあたりのドル量:
+      <input type="number" id="usUnit" value="200">
+    </label><br><br>
+    <label>為替レート（円/ドル）:
+      <input type="number" id="usRate" value="150">
+    </label><br><br>
+    <button onclick="calculate('us')">計算する</button>
+    <h4>耐えられる上昇ポイント: <span id="usResult"></span></h4>
+  </div>
+
+  <script>
+    function showSection(id) {
+      document.getElementById('eu').classList.remove('active');
+      document.getElementById('us').classList.remove('active');
+      document.getElementById(id).classList.add('active');
+    }
+
+    function calculate(type) {
+      const balance = parseFloat(document.getElementById(type + 'Balance').value);
+      const positions = parseFloat(document.getElementById(type + 'Positions').value);
+      const unit = parseFloat(document.getElementById(type + 'Unit').value);
+      const rate = parseFloat(document.getElementById(type + 'Rate').value);
+
+      let result;
+      if (isNaN(balance) || isNaN(positions) || isNaN(unit) || isNaN(rate) || positions === 0 || unit === 0 || rate === 0) {
+        result = '正しい数値を入力してください';
+      } else {
+        result = (balance / (positions * unit * rate)).toFixed(2) + ' ポイント';
+      }
+
+      document.getElementById(type + 'Result').textContent = result;
+    }
+  </script>
+</body>
+</html>
